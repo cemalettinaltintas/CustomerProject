@@ -71,5 +71,73 @@ namespace CustomerProject
             adapter.Fill(dt);
             dataGridView1.DataSource = dt;
         }
+
+        private void btnCreate_Click(object sender, EventArgs e)
+        {
+            sqlConnection.Open();
+            SqlCommand command = new SqlCommand("insert into TblCustomer(CustomerName,CustomerSurname,CustomerBalance,CustomerStatus,CustomerCity) Values(@customerName,@customerSurname,@customerBalance,@customerStatus,@customerCity)", sqlConnection);
+
+            command.Parameters.AddWithValue("@customerName", txtCustomerName.Text);
+            command.Parameters.AddWithValue("@customerSurname", txtCustomerSurname.Text);
+            command.Parameters.AddWithValue("@customerBalance",txtBalance.Text);
+            command.Parameters.AddWithValue("@customerCity", cmbCity.SelectedValue);
+
+            if (rdbActive.Checked)
+            {
+                command.Parameters.AddWithValue("@customerStatus", true);
+            }
+            if (rdbPassive.Checked)
+            {
+                command.Parameters.AddWithValue("@customerStatus", false);
+            }
+            command.ExecuteNonQuery();
+            sqlConnection.Close();
+            MessageBox.Show("Kayıt başarıyla eklendi.");
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            sqlConnection.Open();
+            SqlCommand command = new SqlCommand("delete from TblCustomer where CustomerId=@customerId", sqlConnection);
+            command.Parameters.AddWithValue("@customerId", txtCustomerId.Text);
+            command.ExecuteNonQuery();
+            sqlConnection.Close();
+            MessageBox.Show("Kayıt silindi", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string komut = "select * from TblCustomer where CustomerName=@customerName";
+            SqlCommand command = new SqlCommand(komut, sqlConnection);
+            command.Parameters.AddWithValue("@customerName", txtCustomerName.Text);
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            dataGridView1.DataSource = dt;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            sqlConnection.Open();
+            SqlCommand command = new SqlCommand("update TblCustomer Set CustomerName=@customerName,CustomerSurname=@customerSurname,CustomerBalance=@customerBalance,CustomerStatus=@customerStatus,CustomerCity=@customerCity Where CustomerId=@customerId", sqlConnection);
+
+            command.Parameters.AddWithValue("@customerName", txtCustomerName.Text);
+            command.Parameters.AddWithValue("@customerSurname", txtCustomerSurname.Text);
+            command.Parameters.AddWithValue("@customerBalance",decimal.Parse( txtBalance.Text));
+            command.Parameters.AddWithValue("@customerCity", cmbCity.SelectedValue);
+
+            if (rdbActive.Checked)
+            {
+                command.Parameters.AddWithValue("@customerStatus", true);
+            }
+            if (rdbPassive.Checked)
+            {
+                command.Parameters.AddWithValue("@customerStatus", false);
+            }
+            command.Parameters.AddWithValue("@customerId", txtCustomerId.Text);
+            command.ExecuteNonQuery();
+            sqlConnection.Close();
+            MessageBox.Show("Kayıt başarıyla güncellendi.");
+        }
     }
 }
