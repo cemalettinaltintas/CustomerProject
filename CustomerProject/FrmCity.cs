@@ -32,7 +32,9 @@ namespace CustomerProject
             adapter.Fill(dt);
             dataGridView1.DataSource = dt;
         }
-
+        //ADO.NET
+        //ORM
+        //Entity Framework
         private void btnCreate_Click(object sender, EventArgs e)
         {
             sqlConnection.Open();
